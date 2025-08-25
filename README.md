@@ -1,73 +1,137 @@
-# Development Environemnt Project
-![DevelopmentEnvironemntSetupProject!](https://github.com/Gabinsime75/Realworld_CICD_Pipeline_Project_2025/blob/Maven-SonarQube-Nexus/Maven-SonarQube-Nexus.png)
+# 🚀 CI/CD & DevSecOps Projects Repository
 
-###### Project ToolBox 🧰
-- [Git](https://git-scm.com/) Git will be used to manage our application source code.
-- [Github](https://github.com/) Github is a free and open source distributed VCS designed to handle everything from small to very large projects with speed and efficiency
-- [Maven](https://maven.apache.org/) Maven will be used for the application packaging and building including running unit test cases
-- [SonarQube](https://docs.sonarqube.org/) SonarQube Catches bugs and vulnerabilities in your app, with thousands of automated Static Code Analysis rules.
-- [Nexus](https://www.sonatype.com/) Nexus Manage Binaries and build artifacts across your software supply chain
-- [EC2](https://aws.amazon.com/ec2/) EC2 allows users to rent virtual computers (EC2) to run their own workloads and applications.
+This repository contains hands-on projects demonstrating **Continuous Integration (CI)**, **Continuous Deployment (CD)**, and **DevSecOps** best practices.  
+The goal is to showcase end-to-end automation using industry-leading tools across the CI/CD ecosystem.
 
-## Configure Environments
-1) SonarQube
-    - Create an Create an Ubuntu 20.04 VM instance and call it "SonarQube"
-    - Instance type: t2.medium
-    - Security Group (Open): 9000 and 22 to 0.0.0.0/0
-    - Key pair: Select or create a new keypair
-    - User data (sonarqube-install.sh)
-    - Launch Instance
+---
 
-2) Maven
-    - Create an Amazon Linux 2 VM instance and call it "jenkins-maven-ansible"
-    - Instance type: t2.micro
-    - Security Group (Open): 22 to 0.0.0.0/0 or Your-IP
-    - Key pair: Select or create a new keypair
-    - Use the installation (maven-install.md)
-    - Launch Instance
+## 🗺️ DevSecOps Toolchain (High-Level)
 
-3) Nexus
-    - Create an Amazon Linux 2 VM instance and call it "Nexus"
-    - Instance type: t2.medium
-    - Security Group (Open): 8081 and 22 to 0.0.0.0/0
-    - Key pair: Select or create a new keypair
-    - User data (nexus-install.sh)
-    - Launch Instance
+```mermaid
+flowchart LR
+  subgraph Dev["Developer Workflow"]
+    A[Developer] --> B[GitHub<br/>Pull Requests]
+  end
 
-4) Nexus
-    - Create an Ubuntu 24.04 VM instance and call it "Nexus"
-    - Instance type: t2.medium
-    - Security Group (Open): 8081 and 22 to 0.0.0.0/0
-    - Key pair: Select or create a new keypair
-    - User data (nexus-install-ubuntu24.04.sh)
-    - Launch Instance
+  subgraph CI["Continuous Integration"]
+    B --> C[Jenkins / GitHub Actions<br/>Pipelines]
+    C --> D[Maven Build & Unit Tests]
+    C --> E[SonarQube<br/>SAST & Quality Gates]
+    C --> F[Snyk / Dependency Scanning<br/>SCA]
+  end
 
-## Configure Nexus Repository
-Series of tutorial code snippets for use
-#Maven publish tutorial steps
-Publishing artifact to Nexus snapshot and release repo using maven.
+  subgraph Containerization
+    D --> G[Docker Image Build]
+    G --> H[Trivy Scan<br/>Image & FS CVEs]
+    H --> I[Container Registry]
+  end
 
-1. Create a snapshot repo using nexus, or use default coming in out of the box. DEFAULT 
-2. Create a release repo using nexus, or use default coming out of the box. DEFAULT
-3. Create a group repo having both release, snapshot and other third party repos. or use default coming out of the box.
-4. Download spring initializer project
-5. Go settings.xml under <MAVEN_INSTALL_LOCATION>\apache-maven-3.6.0\conf or C:\Users\<USER_NAME>\.m2  or mkdir ~/.m2
-6. Create/Move profiles named snapshot and release in settings.xml in `~/.m2` (can be done in pom.xml as well)
-7. Add server user name and pwd in setting.xml (Encrypted recommended).
-8. Edit pom.xml and add repository and snapshot repository in distribution management tag DEFAULT/DONE
-9. Mark id should match in step 7 with server id of settings.xml, UPDATE NEXUS IP
-10. Run the following `maven`/`mvn` commands to validate/package/deploy your app artifacts remotely
-   - `mvn validate`   (validate the project is correct and all necessary information is available.)
-   - `mvn compile`    (compile the source code of the project)
-   - `mvn test`       (run tests using a suitable unit testing framework. These tests should not require the code be packaged or deployed.)
-   - `mvn package`    (take the compiled code and package it in its distributable format, such as a WAR/JAR/EAR.)
-   - `mvn verify`     (run any checks to verify the package is valid and meets quality criteria.)
-   - `mvn install`    (install the package into the local repository, for use as a dependency in other projects locally.)
-   - `mvn deploy`     (done in an integration or release environment, copies the final package to the remote/SNAPSHOT repository 
-                      for sharing with other developers and projects.)
+  subgraph IaC["Infrastructure as Code"]
+    C --> J[Terraform Plan/Apply]
+    J --> K[TFLint / Checkov<br/>IaC Static Analysis]
+    J --> L[Ansible Config & App Setup]
+  end
 
-11. Change the version from 1.0-Snapshot to 1.0
-12. Run `mvn deploy` to deploy to Snapshot Repo or `mvn clean deploy -P release`, to deploy it to Release Repo
+  subgraph CD["Continuous Delivery / GitOps"]
+    I --> M[Helm Charts]
+    M --> N[Argo CD (GitOps)]
+    N --> O[Kubernetes Cluster]
+  end
 
-## Maven Lifecycle Phases
-- https://maven.apache.org/guides/introduction/introduction-to-the-lifecycle.html#a-build-lifecycle-is-made-up-of-phases
+  subgraph SecPolicy["Security, Policy, Secrets"]
+    P[HashiCorp Vault<br/>Dynamic Secrets] --> C
+    P --> L
+    Q[OPA / Policy as Code<br/>Admission & CI Policies] --> C
+    Q --> O
+  end
+
+  subgraph Observability
+    O --> R[Prometheus Metrics]
+    O --> S[ELK / OpenSearch Logs]
+    R --> T[Grafana Dashboards]
+    S --> T
+  end
+
+  %% Feedback Loops
+  T -. Alerts/Insights .-> C
+  E -. Quality Gates .-> C
+  F -. Vuln Gates .-> C
+  H -. Image Gates .-> C
+
+📦 Tools Covered
+Build & Dependency Management
+
+Maven – Java build automation and dependency management tool used for packaging applications and managing libraries.
+
+Code Quality & Security
+
+SonarQube – Continuous inspection platform for code quality, detecting bugs, vulnerabilities, and code smells.
+
+Trivy – Container and file system vulnerability scanner for detecting CVEs and misconfigurations.
+
+Checkov – Static analysis tool for scanning Infrastructure-as-Code (Terraform, Kubernetes, etc.) for security misconfigurations.
+
+TFLint – Linter for Terraform to catch errors and enforce best practices.
+
+Snyk – Security tool for scanning open-source dependencies for known vulnerabilities.
+
+CI/CD Orchestration
+
+Jenkins – Automation server for building CI/CD pipelines, integrating with source control, build, and deployment tools.
+
+GitHub Actions – Native CI/CD automation platform in GitHub, useful for workflows triggered by commits and pull requests.
+
+Argo CD – Declarative, GitOps-based CD tool for Kubernetes, enabling automated deployments.
+
+Containers & Orchestration
+
+Docker – Containerization platform for packaging applications into lightweight, portable images.
+
+Kubernetes (K8s) – Container orchestration system for scaling, networking, and managing containerized applications.
+
+Helm – Package manager for Kubernetes, enabling easy installation and management of complex applications.
+
+Infrastructure as Code (IaC)
+
+Terraform – Infrastructure-as-Code tool for provisioning cloud and on-prem resources using declarative configurations.
+
+Ansible – Configuration management and automation tool for provisioning servers, applications, and environments.
+
+CloudFormation – AWS-native Infrastructure-as-Code service for provisioning and managing resources.
+
+Monitoring & Logging
+
+Prometheus – Monitoring and alerting system for collecting metrics and powering Grafana dashboards.
+
+Grafana – Visualization platform for monitoring data and alerting across multiple sources.
+
+ELK / OpenSearch Stack – Logging and observability stack for centralized log management.
+
+Secrets & Policy Management
+
+Vault (HashiCorp Vault) – Tool for securely managing and accessing secrets, API keys, and credentials.
+
+OPA (Open Policy Agent) – Policy-as-Code tool for enforcing fine-grained access control and compliance rules.
+
+📂 Repository Structure
+
+Each folder represents a dedicated project that demonstrates a CI/CD or DevSecOps workflow.
+Examples include:
+
+ci-maven-jenkins/ → CI pipeline for Java apps using Maven + Jenkins.
+
+cd-argocd-k8s/ → GitOps deployment pipelines using Argo CD & Kubernetes.
+
+iac-terraform-ansible/ → Infrastructure provisioning with Terraform and configuration with Ansible.
+
+security-sonarqube-snyk/ → Code quality and dependency security scanning workflows.
+
+🎯 Objectives
+
+Automate builds, tests, deployments, and security checks.
+
+Demonstrate GitOps workflows with Argo CD and Kubernetes.
+
+Showcase Infrastructure-as-Code for cloud-native environments.
+
+Apply DevSecOps principles (shift-left security, compliance, observability).
