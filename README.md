@@ -10,16 +10,7 @@
 - [EC2](https://aws.amazon.com/ec2/) EC2 allows users to rent virtual computers (EC2) to run their own workloads and applications.
 
 ## Configure Environments
-1) Create a GitHub Repository
-    - Navigate to https://github.com
-    - Click on Repositories
-    - Click on `Create` to Create a Repository
-     - Repository Name: maven-sonarqube-nexus-project
-     - Click on `Create`
-     - Download the Project Zip from https://github.com/awanmbandi/realworld-cicd-pipeline-project/tree/maven-sonarqube-nexus
-     - Unzip and Push the code to the Repository you just provisioned
-
-2) SonarQube
+1) SonarQube
     - Create an Create an Ubuntu 20.04 VM instance and call it "SonarQube"
     - Instance type: t2.medium
     - Security Group (Open): 9000 and 22 to 0.0.0.0/0
@@ -27,7 +18,7 @@
     - User data (Copy the following user data): https://github.com/awanmbandi/realworld-cicd-pipeline-project/blob/maven-sonarqube-nexus-jenkins-install/sonarqube-install.sh
     - Launch Instance
 
-3) Maven
+2) Maven
     - Create an Amazon Linux 2 VM instance and call it "jenkins-maven-ansible"
     - Instance type: t2.micro
     - Security Group (Open): 22 to 0.0.0.0/0 or Your-IP
@@ -35,7 +26,7 @@
     - User data (Copy the following user data): https://github.com/awanmbandi/realworld-cicd-pipeline-project/blob/maven-sonarqube-nexus-jenkins-install/maven-install.md
     - Launch Instance
 
-4) Nexus
+3) Nexus
     - Create an Amazon Linux 2 VM instance and call it "Nexus"
     - Instance type: t2.medium
     - Security Group (Open): 8081 and 22 to 0.0.0.0/0
@@ -43,7 +34,7 @@
     - User data (Copy the following user data): https://github.com/awanmbandi/realworld-cicd-pipeline-project/blob/maven-sonarqube-nexus-jenkins-install/nexus-install.sh
     - Launch Instance
 
-5) Nexus
+4) Nexus
     - Create an Ubuntu 24.04 VM instance and call it "Nexus"
     - Instance type: t2.medium
     - Security Group (Open): 8081 and 22 to 0.0.0.0/0
